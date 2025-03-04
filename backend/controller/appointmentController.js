@@ -61,4 +61,17 @@ export const bookAppointment = async (req, res) => {
         res.status(500).json({ message: "Error canceling appointment" });
     }
 };
+ 
+export const getPatientAppointments = async (req, res) => {
+    try {
+      const patientId = req.user.id; 
   
+      // Fetch appointments for the logged-in patient
+      const appointments = await Appointment.find({ patientId }).populate("doctorId", "name");
+  
+      res.status(200).json(appointments);
+    } catch (error) {
+      console.error("Error fetching patient appointments:", error);
+      res.status(500).json({ message: "Error fetching patient appointments" });
+    }
+  }; 

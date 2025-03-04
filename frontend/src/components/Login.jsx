@@ -1,25 +1,40 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5001/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    if (data.success) {
+    try {
+      const response = await fetch("https://doctor-appointmentbookingsystem.onrender.com/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+  
       localStorage.setItem("token", data.token);
       alert("Login successful!");
-    } else {
-      alert(data.message);
+      console.log("User Role:", data.user.role);
+      // Redirect based on role
+      if (data.user.role === "patient") {
+        navigate("/patientDashboard");
+      } else if (data.user.role === "doctor") {
+        navigate("/doctorDashboard");
+      }
+    } catch (error) {
+      alert(error.message || "Something went wrong");
     }
   };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
