@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema({
       day: { type: String, index: true },
       startTime: String,
       endTime: String,
+      consultLocations: [{ type: String, index: true }], // New field for locations
     },
   ],
 });

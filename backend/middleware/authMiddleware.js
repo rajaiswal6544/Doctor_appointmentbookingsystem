@@ -1,21 +1,48 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { User } from "../models/User.js";
 dotenv.config();
 
-export const authenticate = (req, res, next) => {
-    const authHeader = req.header('Authorization');
+export const auth =  async (req, res, next) => {
+    const token = req.header("Authorization")?.split(" ")[1];
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'No token, authorization denied' });
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
     }
+  
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.userId = decoded.id; // Attach userId to the request
+  
+      // Verify user exists
+      const user = await User.findById(req.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      next();
+    } catch (error) {
+      res.status(401).json({ message: "Invalid token" });
+    }
+  };
+  export const authenticate = async (req, res, next) => {
+    const token = req.header("Authorization")?.split(" ")[1];
 
-    const token = authHeader.split(' ')[1]; // Extract only the token
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;  // Attach user data to request object
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        req.user = user; // Attach full user object
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Invalid token' });
+        res.status(401).json({ message: "Invalid token" });
     }
 };
