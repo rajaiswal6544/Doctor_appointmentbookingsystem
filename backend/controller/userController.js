@@ -42,18 +42,18 @@ export const loginUser = async (req, res) => {
     }
   };
 
-export const getUserProfile = async (req, res) => {
+  export const getUserProfile = async (req, res) => {
     try {
       const { userId } = req.params;
   
-      // Find user by ID
-      const user = await User.findById(userId).select("-password"); // Exclude password for security
+      // Find user by ID, exclude password for security
+      const user = await User.findById(userId).select("-password");
   
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
   
-      // Separate doctor and patient profiles
+      // Structure response based on user role
       if (user.role === "doctor") {
         return res.status(200).json({
           name: user.name,
@@ -61,17 +61,20 @@ export const getUserProfile = async (req, res) => {
           specialty: user.specialty,
           experience: user.experience,
           location: user.location,
-          availability: user.availability,
+          availability: user.availability || [],
         });
-      } else {
+      } else if (user.role === "patient") {
         return res.status(200).json({
           name: user.name,
           role: user.role,
           email: user.email,
-          location: user.location,
         });
+      } else {
+        return res.status(400).json({ message: "Invalid user role" });
       }
     } catch (error) {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   };
+  
+   
