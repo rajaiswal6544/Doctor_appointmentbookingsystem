@@ -28,7 +28,7 @@ const PatientDashboard = () => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const specialties = ["Cardiologist", "Dermatologist", "Neurologist", "Pediatrician"];
-  const locations = ["New York", "Los Angeles", "Chicago", "Houston"];
+  const locations = ["New York", "Los Angeles", "Chicago", "Houston","Kolkata"];
 
   useEffect(() => {
     if (token) {
