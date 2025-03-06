@@ -27,10 +27,12 @@ UserSchema.index({ specialty: 1, "location.city": 1 }); // Filtering
 
 // Validation for doctors
 UserSchema.pre("save", function (next) {
-  if (this.role === "doctor" && (!this.specialty || !this.experience)) {
-    return next(new Error("Doctors must have a specialty and experience"));
-  }
-  next();
-});
+    if (this.role === "doctor") {
+      if (!this.specialty || !this.experience || !this.location) {
+        return next(new Error("Doctors must have a specialty, experience, and location"));
+      }
+    }
+    next();
+  });
 
 export const User = mongoose.model("User", UserSchema);
