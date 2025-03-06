@@ -46,13 +46,13 @@ const AvailabilityForm = () => {
     }
 
     dispatch(updateAvailability({ token: authToken, availability: availabilities }));
-    toast.success("Registered successfully! guiding to login", {
+    toast.success("Availability Updated Suceessfully", {
       onClose: () => navigate("/doctorDashboard"),
     });
   };
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-lg mb-6">
+    <div className="bg-white p-6 shadow-lg rounded-lg mb-6 max-w-xl mx-auto">
         <ToastContainer/>
       <h2 className="text-xl font-bold mb-4">Manage Availability</h2>
 

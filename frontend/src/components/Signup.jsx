@@ -10,16 +10,18 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [experience, setExperience] = useState("");
-  const [location, setLocation] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
     const userData = { name, email, password, role };
     if (role === "doctor") {
       userData.specialty = specialty;
-      userData.experience = experience;
-      userData.location = location;
+      userData.experience = Number(experience); // Convert to number
+      userData.location = { city, state }; // Store as object
     }
 
     try {
@@ -31,10 +33,9 @@ const Signup = () => {
 
       const data = await response.json();
       if (response.ok) {
-        toast.success("Registered Successfully! Guiding to login page", {
-            onClose: () => navigate("/login"),
-          });
-        
+        toast.success("Registered Successfully! Redirecting to login page...", {
+          onClose: () => navigate("/login"),
+        });
       } else {
         toast.error(data.message || "Signup failed.");
       }
@@ -45,7 +46,7 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <ToastContainer/>
+      <ToastContainer />
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
 
@@ -97,7 +98,7 @@ const Signup = () => {
                 onChange={(e) => setSpecialty(e.target.value)}
               />
               <input
-                type="text"
+                type="number"
                 placeholder="Years of Experience"
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 value={experience}
@@ -105,10 +106,17 @@ const Signup = () => {
               />
               <input
                 type="text"
-                placeholder="Location (City)"
+                placeholder="City"
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="State"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
               />
             </>
           )}

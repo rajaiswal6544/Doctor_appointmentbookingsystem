@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaUserMd, FaCalendarAlt, FaClock, FaHospital, FaSignOutAlt, FaCog, FaUser } from "react-icons/fa";
 import { getDoctorAppointments } from "../slices/doctorsSlice";
 import { fetchUserProfile } from "../slices/userSlice";
-
+import { useNavigate } from "react-router-dom";
 const DoctorDashboard = ({ token }) => {
   const authToken = token || localStorage.getItem("token");
   const dispatch = useDispatch();
   const doctor = useSelector((state) => state.user.user);
   const { appointments, appointmentsStatus, appointmentsError } = useSelector((state) => state.doctors);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (authToken) {
       dispatch(fetchUserProfile(authToken));
@@ -30,7 +30,7 @@ const DoctorDashboard = ({ token }) => {
             <FaHospital className="mr-2 text-blue-500" /> <a href="#">Dashboard</a>
           </li>
           <li className="mb-4 py-2 px-4 flex items-center rounded-lg hover:bg-blue-100 cursor-pointer">
-            <FaClock className="mr-2 text-gray-700" /> <a href="/updateAvailability">Manage Availability</a>
+            <FaClock className="mr-2 text-gray-700" /> <a href="/updateAvaialibility">Manage Availability</a>
           </li>
           <li className="mb-4 py-2 px-4 flex items-center rounded-lg hover:bg-blue-100 cursor-pointer">
             <FaUser className="mr-2 text-gray-700" /> <a href="#">My Patients</a>
@@ -39,9 +39,12 @@ const DoctorDashboard = ({ token }) => {
             <FaCog className="mr-2 text-gray-700" /> <a href="#">Settings</a>
           </li>
         </ul>
-        <button className="w-full mt-6 py-2 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition">
-          <FaSignOutAlt className="mr-2" /> Log Out
-        </button>
+        <button
+      onClick={() => navigate("/logout")}
+      className="w-full mt-6 py-2 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition"
+    >
+      <FaSignOutAlt className="mr-2" /> Log Out
+    </button>
       </div>
 
       <div className="flex-1 p-6">

@@ -19,12 +19,7 @@ const HomePage = () => {
           appointment instantly with Agoro. A seamless doctor appointment
           booking experience awaits you.
         </p>
-        <button
-          className="bg-blue-600 hover:bg-blue-700 transition duration-300 text-white font-semibold py-3 px-8 rounded-lg text-lg shadow-lg"
-          onClick={() => navigate("/appointments")}
-        >
-          Make Appointment
-        </button>
+        
       </div>
 
       {/* Navigation Buttons */}

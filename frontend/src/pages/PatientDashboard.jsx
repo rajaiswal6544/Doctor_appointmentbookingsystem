@@ -10,10 +10,11 @@ import moment from "moment";
 import {ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchUserProfile } from "../slices/userSlice";
-
+import { useNavigate } from "react-router-dom";
 
 const PatientDashboard = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const patient = useSelector((state) => state.user.user);
   const appointments = useSelector((state) => state.appointments.list);
@@ -90,8 +91,9 @@ const PatientDashboard = () => {
   
     try {
       await dispatch(bookAppointment({ token, ...appointmentData }));
-      toast.success("Appointment booked successfully!");
-      window.location.reload(); // <-- Forces full page reload
+      toast.success("Appointment booked successfully!", {
+        onClose: () => window.location.reload(), // Reload after toast disappears
+      });
     } catch (error) {
       toast.error("Failed to book appointment.");
     }
@@ -102,8 +104,10 @@ const PatientDashboard = () => {
     if (window.confirm("Are you sure you want to cancel this appointment?")) {
       dispatch(cancelAppointment({ token, appointmentId }))
         .then(() => {
-          toast.success("Appointment canceled successfully.");
-          dispatch(fetchAppointments(token)); 
+            dispatch(fetchAppointments(token))
+            toast.success("Appointment canceled successfully.")
+                  // Dispatch after toast disappears
+          
         })
         .catch(() => {
           toast.error("Failed to cancel appointment.");
@@ -127,6 +131,12 @@ const PatientDashboard = () => {
         <ul>
           <li className="mb-2 flex items-center"><FaSearch className="mr-2" /><a href="#" className="text-blue-500">Search Doctors</a></li>
           <li className="mb-2 flex items-center"><FaCalendarAlt className="mr-2" /><a href="#" className="text-gray-700">My Appointments</a></li>
+          <button
+      onClick={() => navigate("/logout")}
+      className="w-full mt-6 py-2 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition"
+    >
+      <FaSignOutAlt className="mr-2" /> Log Out
+    </button>
         </ul>
       </div>
 
